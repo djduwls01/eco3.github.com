@@ -20,7 +20,7 @@
         /* ----- 위쪽 메뉴 (HEADER) ----- */
         header {
             height: 75px;
-            padding: 0 70px;
+            padding: 0 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -37,8 +37,13 @@
             cursor: pointer;
         }
 
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
         nav a {
-            margin: 0 12px;
+            margin: 0 10px;
             text-decoration: none;
             color: #536158;
             font-size: 15px;
@@ -53,13 +58,23 @@
         .auth-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .user-welcome {
+        .user-welcome-btn {
+            background: none;
+            border: 1px solid #438354;
+            padding: 6px 12px;
+            border-radius: 15px;
             font-size: 14px;
             color: #173b25;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-welcome-btn:hover {
+            background-color: #edf5ed;
         }
 
         .header-btn {
@@ -78,16 +93,25 @@
             background-color: #438354;
         }
 
-        .header-btn.danger {
-            background-color: #c94a4a;
-        }
-
-        .header-btn.danger:hover {
-            background-color: #a33333;
-        }
-
         .header-btn.admin-btn {
             background-color: #d97706;
+        }
+
+        .logout-nav-btn {
+            margin-left: 8px;
+            padding: 6px 12px;
+            border: 1px solid #c94a4a;
+            border-radius: 15px;
+            background-color: transparent;
+            color: #c94a4a;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-nav-btn:hover {
+            background-color: #c94a4a;
+            color: white;
         }
 
         /* ----- 메인 화면 ----- */
@@ -277,9 +301,24 @@
             padding: 35px 80px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             color: #7b867e;
             background-color: #f7faf6;
             border-top: 1px solid #e2e9e3;
+        }
+
+        .footer-delete-btn {
+            color: #a33333;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .footer-delete-btn:hover {
+            color: #c94a4a;
         }
 
         /* ----- 공통 모달 오버레이 ----- */
@@ -333,7 +372,7 @@
 
         /* ----- 회원가입/로그인/비밀번호찾기 모달 ----- */
         #auth-modal .modal-content {
-            width: 420px;
+            width: 440px;
         }
 
         .auth-tabs {
@@ -366,7 +405,7 @@
             display: block;
         }
 
-        .auth-form input {
+        .auth-form input, .auth-form select {
             width: 100%;
             margin: 6px 0;
             padding: 12px;
@@ -376,7 +415,7 @@
             outline: none;
         }
 
-        .auth-form input:focus {
+        .auth-form input:focus, .auth-form select:focus {
             border-color: #438354;
         }
 
@@ -405,14 +444,47 @@
             background-color: #173b25;
         }
 
+        .auth-links {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 12px;
+        }
+
         .auth-link {
-            display: block;
-            text-align: right;
-            margin-top: 10px;
             font-size: 13px;
             color: #667269;
             cursor: pointer;
             text-decoration: underline;
+        }
+
+        .auth-link.danger {
+            color: #c94a4a;
+        }
+
+        /* ----- 내 정보 모달 (마이페이지) ----- */
+        #mypage-modal .modal-content {
+            width: 420px;
+        }
+
+        .mypage-field {
+            margin-bottom: 15px;
+        }
+
+        .mypage-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #536158;
+            margin-bottom: 5px;
+        }
+
+        .mypage-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         /* ----- 정보 모달 ----- */
@@ -521,8 +593,8 @@
 
         /* ----- 반응형 디자인 ----- */
         @media (max-width: 800px) {
-            header { padding: 0 20px; }
-            nav { display: none; }
+            header { padding: 0 20px; flex-direction: column; height: auto; padding-bottom: 10px;}
+            nav { margin-top: 10px; flex-wrap: wrap; justify-content: center;}
             .main { padding: 40px 20px; flex-direction: column; }
             .main-text { width: 100%; }
             h1 { font-size: 38px; }
@@ -544,7 +616,7 @@
             EIJU <span>ECO</span>
         </div>
 
-        <nav>
+        <nav id="main-nav">
             <a onclick="showInformation('회사소개')">회사소개</a>
             <a onclick="showInformation('환경규제')">환경 규제</a>
             <a onclick="showInformation('환경 정보')">환경 정보</a>
@@ -553,6 +625,7 @@
             <a onclick="showInformation('정부 지원 사업')">정부 지원 사업</a>
             <a onclick="showInformation('환경 인증')">환경 인증</a>
             <a onclick="handleConsultingClick()"><strong>컨설팅 문의</strong></a>
+            <span id="nav-logout-area"></span>
         </nav>
 
         <div class="auth-container" id="auth-container">
@@ -656,12 +729,17 @@
 
     <!-- 하단 푸터 -->
     <footer>
-        <strong>ECO INFORMATION (EIJU)</strong>
-        <span>환경 정보를 더 쉽고 가깝게. © EIJU. All rights reserved.</span>
+        <div>
+            <strong>ECO INFORMATION (EIJU)</strong><br>
+            <span style="font-size:13px;">환경 정보를 더 쉽고 가깝게. © EIJU. All rights reserved.</span>
+        </div>
+        <div id="footer-delete-container">
+            <!-- 로그인 상태일 때 하단에 회원탈퇴 배치 -->
+        </div>
     </footer>
 
 
-    <!-- ==================== [모달 1] 로그인 / 회원가입 / 비밀번호찾기 모달 ==================== -->
+    <!-- ==================== [모달 1] 로그인 / 회원가입 / 비밀번호찾기 / 탈퇴 모달 ==================== -->
     <div class="modal-overlay" id="auth-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('auth-modal')">&times;</button>
@@ -679,7 +757,10 @@
                 <input type="text" id="login-id" placeholder="아이디" required>
                 <input type="password" id="login-pw" placeholder="비밀번호" required>
                 <button type="submit">로그인하기</button>
-                <span class="auth-link" onclick="switchAuthTab('find')">비밀번호 찾기</span>
+                <div class="auth-links">
+                    <span class="auth-link" onclick="switchAuthTab('find')">비밀번호 찾기</span>
+                    <span class="auth-link danger" onclick="switchAuthTab('delete')">회원탈퇴</span>
+                </div>
             </form>
 
             <!-- 2. 관리자 로그인 폼 -->
@@ -688,25 +769,34 @@
                 <h2 style="margin: 5px 0 15px 0;">관리자 전용 로그인</h2>
                 <input type="text" id="admin-id" placeholder="관리자 아이디" required>
                 <input type="password" id="admin-pw" placeholder="관리자 비밀번호" required>
-                <label>관리자 암호 코드</label>
-                <input type="password" id="admin-code" placeholder="관리자 코드 (1010)" required>
+                <label>관리자 보안 코드</label>
+                <input type="password" id="admin-code" placeholder="관리자용 코드를 입력해주세요" required>
                 <button type="submit" style="background-color: #d97706;">관리자 로그인</button>
             </form>
 
-            <!-- 3. 회원가입 폼 -->
+            <!-- 3. 회원가입 폼 (관리자 회원가입도 통합) -->
             <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
                 <div class="small-title">JOIN US</div>
                 <h2 style="margin: 5px 0 15px 0;">신규 회원가입</h2>
+                <label>계정 유형</label>
+                <select id="signup-type" onchange="toggleAdminCodeField()">
+                    <option value="user">일반 회원</option>
+                    <option value="admin">관리자 계정</option>
+                </select>
                 <input type="text" id="signup-name" placeholder="기업명 (또는 이름)" required>
                 <input type="text" id="signup-id" placeholder="사용할 아이디" required>
                 <input type="password" id="signup-pw" placeholder="비밀번호" required>
-                <label>비밀번호 찾기 질문</label>
-                <input type="text" value="제일 좋아하는 책 이름은?" readonly style="background-color: #f2f2f2;">
-                <input type="text" id="signup-book" placeholder="책 이름을 입력하세요" required>
+                
+                <div id="signup-question-group">
+                    <label>비밀번호 찾기 질문</label>
+                    <input type="text" value="제일 좋아하는 책 이름은?" readonly style="background-color: #f2f2f2;">
+                    <input type="text" id="signup-book" placeholder="책 이름을 입력하세요">
+                </div>
+
                 <button type="submit">가입하기</button>
             </form>
 
-            <!-- 4. 비밀번호 찾기 (본인 확인) 폼 -->
+            <!-- 4. 비밀번호 찾기 폼 -->
             <form class="auth-form" id="form-find" onsubmit="handleFindPw(event)">
                 <div class="small-title">FIND PASSWORD</div>
                 <h2 style="margin: 5px 0 15px 0;">비밀번호 찾기</h2>
@@ -715,7 +805,9 @@
                 <input type="text" value="제일 좋아하는 책 이름은?" readonly style="background-color: #f2f2f2;">
                 <input type="text" id="find-book" placeholder="가입 시 작성한 책 이름 입력" required>
                 <button type="submit">답변 확인하기</button>
-                <span class="auth-link" onclick="switchAuthTab('login')">로그인으로 돌아가기</span>
+                <div class="auth-links">
+                    <span class="auth-link" onclick="switchAuthTab('login')">로그인으로 돌아가기</span>
+                </div>
             </form>
 
             <!-- 5. 비밀번호 재설정 폼 -->
@@ -725,26 +817,51 @@
                 <input type="password" id="reset-new-pw" placeholder="새로운 비밀번호 입력" required>
                 <button type="submit">비밀번호 변경 완료</button>
             </form>
-        </div>
-    </div>
 
-
-    <!-- ==================== [모달 2] 비밀번호 변경 전용 모달 (로그인 후 사용) ==================== -->
-    <div class="modal-overlay" id="change-pw-modal">
-        <div class="modal-content" style="width:400px;">
-            <button class="close-btn" onclick="closeModal('change-pw-modal')">&times;</button>
-            <div class="small-title">CHANGE PASSWORD</div>
-            <h2 style="margin: 5px 0 15px 0;">비밀번호 변경</h2>
-            <form onsubmit="handleChangePwLogged(event)">
-                <input type="password" id="curr-pw-input" placeholder="현재 비밀번호" required style="width:100%; padding:12px; margin:6px 0; border:1px solid #ddd; border-radius:8px;">
-                <input type="password" id="new-pw-input" placeholder="새 비밀번호" required style="width:100%; padding:12px; margin:6px 0; border:1px solid #ddd; border-radius:8px;">
-                <button type="submit" style="width:100%; margin-top:15px; padding:12px; border:none; border-radius:8px; color:white; background-color:#438354; font-weight:bold; cursor:pointer;">변경하기</button>
+            <!-- 6. 비로그인 상태 회원탈퇴 폼 -->
+            <form class="auth-form" id="form-delete" onsubmit="handleModalDeleteAccount(event)">
+                <div class="small-title danger" style="color:#c94a4a;">DELETE ACCOUNT</div>
+                <h2 style="margin: 5px 0 15px 0;">회원 탈퇴</h2>
+                <p style="font-size:13px; color:#667269;">본인 확인을 위해 아이디와 비밀번호를 입력해주세요.</p>
+                <input type="text" id="delete-id" placeholder="탈퇴할 아이디" required>
+                <input type="password" id="delete-pw" placeholder="비밀번호" required>
+                <button type="submit" style="background-color:#c94a4a;">회원 탈퇴하기</button>
+                <div class="auth-links">
+                    <span class="auth-link" onclick="switchAuthTab('login')">로그인으로 돌아가기</span>
+                </div>
             </form>
         </div>
     </div>
 
 
-    <!-- ==================== [모달 3] 정보 촤라락 모달 ==================== -->
+    <!-- ==================== [모달 2] 마이페이지 (내 정보 수정 모달) ==================== -->
+    <div class="modal-overlay" id="mypage-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('mypage-modal')">&times;</button>
+            <div class="small-title">MY PAGE</div>
+            <h2 style="margin: 5px 0 20px 0;">내 정보 관리</h2>
+            <form onsubmit="handleUpdateMyInfo(event)">
+                <div class="mypage-field">
+                    <label>아이디 변경</label>
+                    <input type="text" id="mypage-id" required>
+                </div>
+                <div class="mypage-field">
+                    <label>새 비밀번호 (변경시에만 입력)</label>
+                    <input type="password" id="mypage-pw" placeholder="변경할 비밀번호 입력">
+                </div>
+                <div class="mypage-field">
+                    <label>이름/기업명</label>
+                    <input type="text" id="mypage-name" required>
+                </div>
+                <button type="submit" style="width:100%; padding:12px; border:none; border-radius:8px; color:white; background-color:#438354; font-weight:bold; cursor:pointer; margin-top:10px;">
+                    수정사항 저장하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ==================== [모달 3] 정보 모달 ==================== -->
     <div class="modal-overlay" id="info-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('info-modal')">&times;</button>
@@ -757,7 +874,7 @@
                 </div>
             </div>
 
-            <!-- 촤라락 펼쳐지는 정보 리스트 -->
+            <!-- 정보 리스트 -->
             <div class="info-list" id="modal-info-list"></div>
         </div>
     </div>
@@ -769,15 +886,15 @@
             <button class="close-btn" onclick="closeModal('admin-modal')">&times;</button>
             <div class="small-title">ADMIN MANAGEMENT</div>
             <h2>가입 회원 목록 관리</h2>
-            <p style="color:#667269; font-size:14px;">현재 가입된 전체 회원 목록입니다. 회원을 강제 탈퇴시킬 수 있습니다.</p>
+            <p style="color:#667269; font-size:14px;">현재 가입된 전체 회원 목록입니다.</p>
             
             <div style="max-height: 400px; overflow-y: auto;">
                 <table class="user-table">
                     <thead>
                         <tr>
                             <th>아이디</th>
+                            <th>구분</th>
                             <th>기업/이름</th>
-                            <th>좋아하는 책(답변)</th>
                             <th>관리</th>
                         </tr>
                     </thead>
@@ -793,8 +910,8 @@
     <!-- ==================== 자바스크립트 스크립트 ==================== -->
     <script>
         // 전역 상태 변수
-        let currentUser = null; // 현재 로그인한 사용자 객체 {id, name, isAdmin}
-        let targetResetUserId = null; // 비밀번호 재설정 대상 아이디
+        let currentUser = null; // 현재 로그인한 사용자 {id, name, isAdmin}
+        let targetResetUserId = null;
 
         // 1. 카테고리 정보 데이터베이스
         const db = {
@@ -892,10 +1009,9 @@
 
         function switchAuthTab(tab) {
             const tabs = ['login', 'admin', 'signup'];
-            const forms = ['login', 'admin', 'signup', 'find', 'reset'];
+            const forms = ['login', 'admin', 'signup', 'find', 'reset', 'delete'];
 
-            // 탭 헤더 표시 제어
-            document.getElementById('auth-tab-bar').style.display = (tab === 'find' || tab === 'reset') ? 'none' : 'flex';
+            document.getElementById('auth-tab-bar').style.display = (tab === 'find' || tab === 'reset' || tab === 'delete') ? 'none' : 'flex';
 
             tabs.forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
@@ -912,9 +1028,20 @@
             });
         }
 
-        // 4. 회원가입 처리 (단일 ID & 비밀번호 저장)
+        function toggleAdminCodeField() {
+            const type = document.getElementById('signup-type').value;
+            const qGroup = document.getElementById('signup-question-group');
+            if (type === 'admin') {
+                qGroup.style.display = 'none';
+            } else {
+                qGroup.style.display = 'block';
+            }
+        }
+
+        // 4. 회원가입 처리 (일반/관리자 선택 가능)
         function handleSignup(e) {
             e.preventDefault();
+            const type = document.getElementById('signup-type').value;
             const name = document.getElementById('signup-name').value.trim();
             const id = document.getElementById('signup-id').value.trim();
             const pw = document.getElementById('signup-pw').value;
@@ -925,12 +1052,24 @@
                 return;
             }
 
-            const userData = { id: id, pw: pw, name: name, book: book };
+            const userData = {
+                id: id,
+                pw: pw,
+                name: name,
+                isAdmin: (type === 'admin'),
+                book: (type === 'user') ? book : ''
+            };
+
             localStorage.setItem('user_' + id, JSON.stringify(userData));
 
             alert('회원가입이 완료되었습니다! 로그인 해주세요.');
-            switchAuthTab('login');
-            document.getElementById('login-id').value = id;
+            if (type === 'admin') {
+                switchAuthTab('admin');
+                document.getElementById('admin-id').value = id;
+            } else {
+                switchAuthTab('login');
+                document.getElementById('login-id').value = id;
+            }
         }
 
         // 5. 일반 로그인 처리
@@ -953,46 +1092,69 @@
             }
 
             alert(`${user.name}님, 환영합니다!`);
-            currentUser = { id: user.id, name: user.name, isAdmin: false };
+            currentUser = { id: user.id, name: user.name, isAdmin: user.isAdmin };
             setLoggedInUI();
             closeModal('auth-modal');
         }
 
-        // 6. 관리자 로그인 처리 (관리자 코드 1010 검증)
+        // 6. 관리자 로그인 처리 (보안코드 1010 검증)
         function handleAdminLogin(e) {
             e.preventDefault();
             const id = document.getElementById('admin-id').value.trim();
             const pw = document.getElementById('admin-pw').value;
             const code = document.getElementById('admin-code').value.trim();
 
+            const storedUser = localStorage.getItem('user_' + id);
+            if (!storedUser) {
+                alert('등록된 관리자 계정이 아닙니다. 회원가입을 먼저 진행하세요.');
+                return;
+            }
+
+            const user = JSON.parse(storedUser);
+            if (!user.isAdmin) {
+                alert('해당 계정은 관리자 권한이 없습니다.');
+                return;
+            }
+
+            if (user.pw !== pw) {
+                alert('비밀번호가 올바르지 않습니다.');
+                return;
+            }
+
             if (code !== "1010") {
-                alert("관리자 암호 코드가 올바르지 않습니다! (정답: 1010)");
+                alert("관리자 보안 코드가 올바르지 않습니다.");
                 return;
             }
 
             alert("관리자로 로그인되었습니다.");
-            currentUser = { id: id, name: "최고 관리자", isAdmin: true };
+            currentUser = { id: user.id, name: user.name, isAdmin: true };
             setLoggedInUI();
             closeModal('auth-modal');
         }
 
-        // 7. 로그인 성공 시 헤더 UI 변경
+        // 7. 로그인 성공 시 UI 갱신 (요구사항 반영)
         function setLoggedInUI() {
-            const container = document.getElementById('auth-container');
+            const authContainer = document.getElementById('auth-container');
+            const navLogoutArea = document.getElementById('nav-logout-area');
+            const footerDeleteArea = document.getElementById('footer-delete-container');
+
+            // [요구사항 3,4] XX님 환영합니다 버튼 누르면 내 정보 페이지(마이페이지) 열기
             if (currentUser.isAdmin) {
-                container.innerHTML = `
-                    <span class="user-welcome">👑 <strong>${currentUser.name}</strong></span>
+                authContainer.innerHTML = `
+                    <button class="user-welcome-btn" onclick="openMyPageModal()">👑 ${currentUser.name} 님 (관리자)</button>
                     <button class="header-btn admin-btn" onclick="openAdminModal()">회원 관리</button>
-                    <button class="header-btn" onclick="handleLogout()">로그아웃</button>
                 `;
             } else {
-                container.innerHTML = `
-                    <span class="user-welcome">🌿 <strong>${currentUser.name}</strong> 님</span>
-                    <button class="header-btn" onclick="openModal('change-pw-modal')">비밀번호 변경</button>
-                    <button class="header-btn danger" onclick="handleDeleteAccount()">회원 탈퇴</button>
-                    <button class="header-btn" onclick="handleLogout()">로그아웃</button>
+                authContainer.innerHTML = `
+                    <button class="user-welcome-btn" onclick="openMyPageModal()">🌿 ${currentUser.name} 님 환영합니다!</button>
                 `;
             }
+
+            // [요구사항 2] 로그아웃 버튼은 컨설팅 문의 옆에 위치
+            navLogoutArea.innerHTML = `<button class="logout-nav-btn" onclick="handleLogout()">로그아웃</button>`;
+
+            // [요구사항 2] 회원탈퇴는 웹페이지 최하단 푸터에 위치
+            footerDeleteArea.innerHTML = `<button class="footer-delete-btn" onclick="handleDeleteAccount()">회원 탈퇴</button>`;
         }
 
         function handleLogout() {
@@ -1001,11 +1163,61 @@
             location.reload();
         }
 
-        // 8. 회원 탈퇴 기능 (현재 로그인 계정 삭제)
-        function handleDeleteAccount() {
-            if (!currentUser || currentUser.isAdmin) return;
+        // 8. 마이페이지 (내 페이지) 열기 및 저장 (아이디 & 비밀번호 변경 가능)
+        function openMyPageModal() {
+            if (!currentUser) return;
+            const storedUser = localStorage.getItem('user_' + currentUser.id);
+            if (!storedUser) return;
 
-            if (confirm("정말로 회원 탈퇴를 진행하시겠습니까? 탈퇴 후 계정 정보는 복구할 수 없습니다.")) {
+            const user = JSON.parse(storedUser);
+            document.getElementById('mypage-id').value = user.id;
+            document.getElementById('mypage-name').value = user.name;
+            document.getElementById('mypage-pw').value = '';
+
+            openModal('mypage-modal');
+        }
+
+        function handleUpdateMyInfo(e) {
+            e.preventDefault();
+            const oldId = currentUser.id;
+            const newId = document.getElementById('mypage-id').value.trim();
+            const newName = document.getElementById('mypage-name').value.trim();
+            const newPw = document.getElementById('mypage-pw').value;
+
+            const storedUser = localStorage.getItem('user_' + oldId);
+            if (!storedUser) return;
+
+            let user = JSON.parse(storedUser);
+
+            // 아이디가 변경된 경우
+            if (oldId !== newId) {
+                if (localStorage.getItem('user_' + newId)) {
+                    alert('이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.');
+                    return;
+                }
+                localStorage.removeItem('user_' + oldId);
+                user.id = newId;
+            }
+
+            user.name = newName;
+            if (newPw !== "") {
+                user.pw = newPw;
+            }
+
+            localStorage.setItem('user_' + user.id, JSON.stringify(user));
+            currentUser.id = user.id;
+            currentUser.name = user.name;
+
+            alert('정보가 수정되었습니다!');
+            setLoggedInUI();
+            closeModal('mypage-modal');
+        }
+
+        // 9. 회원 탈퇴 기능 (로그인 상태 - 웹페이지 맨 밑)
+        function handleDeleteAccount() {
+            if (!currentUser) return;
+
+            if (confirm("정말로 회원 탈퇴를 진행하시겠습니까? 계정이 완전 삭제됩니다.")) {
                 localStorage.removeItem('user_' + currentUser.id);
                 alert("회원 탈퇴가 완료되었습니다.");
                 currentUser = null;
@@ -1013,7 +1225,32 @@
             }
         }
 
-        // 9. 비밀번호 찾기 (질문 확인)
+        // 10. 비로그인 상태에서의 회원 탈퇴 (모달 내부)
+        function handleModalDeleteAccount(e) {
+            e.preventDefault();
+            const id = document.getElementById('delete-id').value.trim();
+            const pw = document.getElementById('delete-pw').value;
+
+            const storedUser = localStorage.getItem('user_' + id);
+            if (!storedUser) {
+                alert('존재하지 않는 아이디입니다.');
+                return;
+            }
+
+            const user = JSON.parse(storedUser);
+            if (user.pw !== pw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            if (confirm(`[${id}] 계정을 정말로 탈퇴하시겠습니까?`)) {
+                localStorage.removeItem('user_' + id);
+                alert('회원 탈퇴 처리가 완료되었습니다.');
+                closeModal('auth-modal');
+            }
+        }
+
+        // 11. 비밀번호 찾기
         function handleFindPw(e) {
             e.preventDefault();
             const id = document.getElementById('find-id').value.trim();
@@ -1036,7 +1273,7 @@
             switchAuthTab('reset');
         }
 
-        // 10. 비밀번호 재설정 (비밀번호 찾기 후)
+        // 12. 비밀번호 재설정 완료
         function handleResetPw(e) {
             e.preventDefault();
             const newPw = document.getElementById('reset-new-pw').value;
@@ -1048,33 +1285,13 @@
                 const user = JSON.parse(storedUser);
                 user.pw = newPw;
                 localStorage.setItem('user_' + targetResetUserId, JSON.stringify(user));
-                alert('비밀번호가 성공적으로 변경되었습니다. 변경된 비밀번호로 로그인하세요.');
+                alert('비밀번호가 성공적으로 변경되었습니다. 로그인해 주세요.');
                 targetResetUserId = null;
                 switchAuthTab('login');
             }
         }
 
-        // 11. 로그인 상태에서 비밀번호 변경
-        function handleChangePwLogged(e) {
-            e.preventDefault();
-            const currPw = document.getElementById('curr-pw-input').value;
-            const newPw = document.getElementById('new-pw-input').value;
-
-            const storedUser = localStorage.getItem('user_' + currentUser.id);
-            if (storedUser) {
-                const user = JSON.parse(storedUser);
-                if (user.pw !== currPw) {
-                    alert('현재 비밀번호가 일치하지 않습니다.');
-                    return;
-                }
-                user.pw = newPw;
-                localStorage.setItem('user_' + currentUser.id, JSON.stringify(user));
-                alert('비밀번호가 성공적으로 변경되었습니다.');
-                closeModal('change-pw-modal');
-            }
-        }
-
-        // 12. 컨설팅 문의 클릭 시 로그인 여부 체크
+        // 13. 컨설팅 문의 클릭 핸들러
         function handleConsultingClick() {
             if (!currentUser) {
                 alert("컨설팅 문의는 로그인 후 이용 가능합니다. 로그인 창으로 이동합니다.");
@@ -1084,7 +1301,7 @@
             }
         }
 
-        // 13. 정보 촤라락 모달 표시
+        // 14. 정보 촤라락 모달 표시
         function showInformation(categoryKey) {
             const data = db[categoryKey] || {
                 icon: '💡',
@@ -1113,7 +1330,7 @@
             openModal('info-modal');
         }
 
-        // 14. 검색 기능 (Enter 키 지원)
+        // 15. 검색 기능 (Enter 키 지원)
         function handleSearchKeyup(e) {
             if (e.key === 'Enter') {
                 searchInformation();
@@ -1149,7 +1366,7 @@
             openModal('info-modal');
         }
 
-        // 15. 관리자용 회원 목록 조회 및 강제 탈퇴
+        // 16. 관리자 회원 목록 조회 및 강제 삭제
         function openAdminModal() {
             const tbody = document.getElementById('admin-user-tbody');
             tbody.innerHTML = '';
@@ -1163,8 +1380,8 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${user.id}</strong></td>
+                        <td>${user.isAdmin ? '👑 관리자' : '일반회원'}</td>
                         <td>${user.name}</td>
-                        <td>${user.book || '-'}</td>
                         <td><button class="del-user-btn" onclick="adminDeleteUser('${user.id}')">탈퇴 시키기</button></td>
                     `;
                     tbody.appendChild(tr);
@@ -1172,17 +1389,17 @@
             }
 
             if (userCount === 0) {
-                tbody.innerHTML = `<tr><td colspan="4">가입된 일반 회원이 없습니다.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4">가입된 회원이 없습니다.</td></tr>`;
             }
 
             openModal('admin-modal');
         }
 
         function adminDeleteUser(userId) {
-            if (confirm(`아이디 [${userId}] 회원을 강제로 탈퇴시키겠습니까?`)) {
+            if (confirm(`아이디 [${userId}] 회원을 삭제하시겠습니까?`)) {
                 localStorage.removeItem('user_' + userId);
-                alert('해당 회원이 삭제되었습니다.');
-                openAdminModal(); // 목록 새로고침
+                alert('삭제되었습니다.');
+                openAdminModal();
             }
         }
     </script>
