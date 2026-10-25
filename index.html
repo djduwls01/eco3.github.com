@@ -91,7 +91,7 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 13px;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease;
         }
 
         .btn-header:hover {
@@ -135,7 +135,6 @@
             padding: 80px 20px 100px;
             text-align: center;
             color: var(--color-white);
-            position: relative;
         }
 
         .hero-container {
@@ -612,6 +611,14 @@
             margin-bottom: 6px;
         }
 
+        .info-item h4 a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        .info-item h4 a:hover {
+            text-decoration: underline;
+        }
+
         .info-item p {
             font-size: 14px;
             color: var(--color-text-muted);
@@ -673,7 +680,7 @@
                 <strong>EIJU에서 한눈에</strong> 확인하세요.
             </h1>
             <p class="hero-desc">
-                기업 규모와 사업 분야에 적합한 최신 환경 규제, 용어 사전 및 지원 사업 정보를 제공합니다.
+                구글 스프레드시트 5개 시트 데이터를 기반으로 정형화된 환경 규제 및 지원 사업 정보를 제공합니다.
             </p>
 
             <div class="hero-search-box">
@@ -760,13 +767,13 @@
             <div class="category-card" onclick="showInformation('정부지원사업')">
                 <div class="category-icon">🏢</div>
                 <h3>정부지원사업</h3>
-                <p>에너지/환경 부문 지원 사업 및 중소기업 전용 탄소중립 보조금 안내</p>
+                <p>기후에너지환경부 및 기업마당(중소기업 지원사업) 부문 환경/ESG/에너지 지원 공고</p>
             </div>
 
             <div class="category-card" onclick="showInformation('환경인증')">
                 <div class="category-icon">✅</div>
                 <h3>환경인증</h3>
-                <p>환경표지, 환경성적표지, ISO 14001 인증 등 국가 공인 마크 취득 절차</p>
+                <p>환경표지, 환경성적표지 등 국가 공인 환경 인증 마크 취득 절차</p>
             </div>
 
             <div class="category-card" onclick="showInformation('기타정보')">
@@ -788,8 +795,8 @@
             <div class="about-right">
                 <p>
                     기업의 환경 규제 및 ESG 관련 법안은 빠르게 바뀌고 있으며, 유관 정보는 여러 기관에 파편화되어 있습니다.
-                    EIJU는 데이터를 가공하여 [분야 | 제목 | 내용] 구조로 명확히 정형화하고,
-                    기업 형태에 따른 맞춤형 정보를 손쉽게 파악할 수 있도록 돕습니다.
+                    EIJU는 스프레드시트 5개 시트 데이터를 [제목 / 날짜 / 내용] 구조로 정형화하고,
+                    11가지 기업 분류 옵션에 따른 맞춤형 정보를 손쉽게 파악할 수 있도록 돕습니다.
                 </p>
             </div>
         </div>
@@ -834,7 +841,7 @@
 
     <!-- AUTH MODAL -->
     <div class="modal-overlay" id="auth-modal">
-        <div class="modal-content" style="width: 440px;">
+        <div class="modal-content" style="width: 480px;">
             <button class="close-btn" onclick="closeModal('auth-modal')">&times;</button>
             
             <div class="auth-tabs" id="auth-tab-bar">
@@ -862,7 +869,7 @@
                 <button type="submit" class="btn-submit" style="background-color: #D97706;">관리자 로그인</button>
             </form>
 
-            <!-- 3. SIGNUP (기업 기본 정보 포함) -->
+            <!-- 3. SIGNUP (11가지 통합 기업 분류 옵션 포함) -->
             <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
                 <div class="form-group">
                     <label>계정 유형</label>
@@ -883,23 +890,127 @@
                 <div class="form-group"><label>기업명 / 이름</label><input type="text" id="signup-name" required></div>
                 <div class="form-group"><label>비밀번호</label><input type="password" id="signup-pw" required></div>
 
-                <!-- 필수 맞춤형 정보 수집 -->
-                <div id="company-info-group" style="background-color: var(--color-bg-light); padding:12px; border-radius:10px; margin-bottom:12px;">
+                <!-- 11가지 통합 기업 분류 선택지 그룹 -->
+                <div id="company-info-group" style="background-color: var(--color-bg-light); padding:15px; border-radius:10px; margin-bottom:14px; max-height:280px; overflow-y:auto;">
+                    <p style="font-size:12px; font-weight:800; color:var(--color-primary); margin-bottom:10px;">📋 맞춤형 정보 제공을 위한 기업 분류 설정</p>
+                    
                     <div class="form-group">
-                        <label>기업 규모 형태</label>
-                        <select id="signup-scale" required>
-                            <option value="sme">중소기업</option>
-                            <option value="large">대기업 / 중견기업</option>
-                            <option value="startup">스타트업 / 창업기업</option>
+                        <label>1. 기업 규모 (상시 근로자 수)</label>
+                        <select id="opt-scale">
+                            <option value="10명 미만 (소상공인)">10명 미만 (소상공인)</option>
+                            <option value="10명 이상 ~ 50명 미만 (소기업)">10명 이상 ~ 50명 미만 (소기업)</option>
+                            <option value="50명 이상 ~ 300명 미만 (중기업)">50명 이상 ~ 300명 미만 (중기업)</option>
+                            <option value="300명 이상 ~ 1,000명 미만 (중견기업)">300명 이상 ~ 1,000명 미만 (중견기업)</option>
+                            <option value="1,000명 이상 (대기업)">1,000명 이상 (대기업)</option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label>주요 사업 분야</label>
-                        <select id="signup-biz" required>
-                            <option value="air">대기배출 / 제조업</option>
-                            <option value="water">수질 / 폐수처리</option>
-                            <option value="recycling">순환경제 / 폐기물</option>
-                            <option value="carbon">탄소중립 / ESG</option>
+                        <label>2. 연간 매출액</label>
+                        <select id="opt-revenue">
+                            <option value="10억 원 미만">10억 원 미만</option>
+                            <option value="10억 원 이상 ~ 50억 원 미만">10억 원 이상 ~ 50억 원 미만</option>
+                            <option value="50억 원 이상 ~ 100억 원 미만">50억 원 이상 ~ 100억 원 미만</option>
+                            <option value="100억 원 이상 ~ 500억 원 미만">100억 원 이상 ~ 500억 원 미만</option>
+                            <option value="500억 원 이상 ~ 1,000억 원 미만">500억 원 이상 ~ 1,000억 원 미만</option>
+                            <option value="1,000억 원 이상 ~ 5,000억 원 미만">1,000억 원 이상 ~ 5,000억 원 미만</option>
+                            <option value="5,000억 원 이상">5,000억 원 이상</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>3. 자산총액</label>
+                        <select id="opt-asset">
+                            <option value="100억 원 미만">100억 원 미만</option>
+                            <option value="100억 원 이상 ~ 500억 원 미만">100억 원 이상 ~ 500억 원 미만</option>
+                            <option value="500억 원 이상 ~ 1,000억 원 미만">500억 원 이상 ~ 1,000억 원 미만</option>
+                            <option value="1,000억 원 이상 ~ 5,000억 원 미만">1,000억 원 이상 ~ 5,000억 원 미만</option>
+                            <option value="5,000억 원 이상 (상장사 ESG 공시 고려 대상)">5,000억 원 이상 (상장사 ESG 공시 고려 대상)</option>
+                            <option value="2조 원 이상 (대기업 단계적 의무 공시 대상)">2조 원 이상 (대기업 단계적 의무 공시 대상)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. 주요 업종</label>
+                        <select id="opt-industry">
+                            <option value="제조업 (중화학·석유·철강 등)">제조업 (중화학·석유·철강 등)</option>
+                            <option value="제조업 (일반·경공업)">제조업 (일반·경공업)</option>
+                            <option value="IT / 정보통신 / 소프트웨어">IT / 정보통신 / 소프트웨어</option>
+                            <option value="건설업 / 부동산 개발">건설업 / 부동산 개발</option>
+                            <option value="운수 / 물류 / 유통">운수 / 물류 / 유통</option>
+                            <option value="도소매 / 서비스업">도소매 / 서비스업</option>
+                            <option value="에너지 / 발전 / 자원순환">에너지 / 발전 / 자원순환</option>
+                            <option value="금융 / 전문 서비스">금융 / 전문 서비스</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. 사업장 형태 및 소유 구조</label>
+                        <select id="opt-structure">
+                            <option value="단일 오피스/사무실 (임차)">단일 오피스/사무실 (임차)</option>
+                            <option value="단일 공장/생산시설 (자사 소유)">단일 공장/생산시설 (자사 소유)</option>
+                            <option value="국내 다수 사업장 (공장 + 오피스 + 물류센터 등)">국내 다수 사업장 (공장 + 오피스 + 물류센터 등)</option>
+                            <option value="글로벌 사업장 보유 (해외 생산/법인 운영)">글로벌 사업장 보유 (해외 생산/법인 운영)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>6. 오염물질 배출 사업장 등급</label>
+                        <select id="opt-emission">
+                            <option value="대기/수질 1~2종 사업장">대기/수질 1~2종 사업장 (통합환경관리제도 대상 대규모 배출)</option>
+                            <option value="대기/수질 3~5종 사업장">대기/수질 3~5종 사업장 (소규모 배출 및 신고 대상)</option>
+                            <option value="유해화학물질 / 지정폐기물 다량 배출 사업장">유해화학물질 / 지정폐기물 다량 배출 사업장</option>
+                            <option value="배출시설 없음 (일반 오피스/무배출)">배출시설 없음 (일반 오피스/무배출)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>7. 탄소/에너지 관련 법적 규제 대상</label>
+                        <select id="opt-regulation">
+                            <option value="온실가스 배출권거래제 할당대상업체">온실가스 배출권거래제 할당대상업체</option>
+                            <option value="목표관리제 대상업체">목표관리제 대상업체</option>
+                            <option value="에너지다소비사업자 (연간 2,000TOE 이상)">에너지다소비사업자 (연간 2,000TOE 이상)</option>
+                            <option value="해당 없음 (자율 관리 대상)">해당 없음 (자율 관리 대상)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>8. 에너지 및 자원 소비 특성</label>
+                        <select id="opt-consumption">
+                            <option value="고전력 소비 (데이터센터, 정밀 제조 등)">고전력 소비 (데이터센터, 정밀 제조 등)</option>
+                            <option value="용수 다소비 (식음료, 반도체, 세탁 등)">용수 다소비 (식음료, 반도체, 세탁 등)</option>
+                            <option value="일회용품 / 포장재 다량 배출 (유통, 이커머스)">일회용품 / 포장재 다량 배출 (유통, 이커머스)</option>
+                            <option value="신재생에너지 도입/자체 발전 보유">신재생에너지 도입/자체 발전 보유</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>9. 글로벌 공급망 환경 요구 수준</label>
+                        <select id="opt-supply">
+                            <option value="요구 사항 없음 (국내/내수 중심)">요구 사항 없음 (국내/내수 중심)</option>
+                            <option value="국내 대기업 납품용 탄소 데이터 제출 요구">국내 대기업 납품용 탄소 데이터 제출 요구</option>
+                            <option value="해외 수출용 CBAM / 공급망 실사법 적용">해외 수출용 CBAM / 공급망 실사법 적용</option>
+                            <option value="글로벌 RE100 / Scope 3 공시 요구">글로벌 RE100 / Scope 3 공시 요구</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>10. ESG 및 환경 관리 단계</label>
+                        <select id="opt-esg-stage">
+                            <option value="정보 탐색 단계 (입문)">정보 탐색 단계 (입문)</option>
+                            <option value="공시 준비 / 공급망 평가 대응 단계 (중급)">공시 준비 / 공급망 평가 대응 단계 (중급)</option>
+                            <option value="자체 ESG 보고서 발행 / RE100 이행 단계 (고도화)">자체 ESG 보고서 발행 / RE100 이행 단계 (고도화)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>11. 주요 보유 환경 인증</label>
+                        <select id="opt-certification">
+                            <option value="인증 없음 / 미파악">인증 없음 / 미파악</option>
+                            <option value="ISO 14001 (환경경영시스템)">ISO 14001 (환경경영시스템)</option>
+                            <option value="녹색기업 지정">녹색기업 지정</option>
+                            <option value="EcoVadis / CDP 등 글로벌 ESG 평가 참여">EcoVadis / CDP 등 글로벌 ESG 평가 참여</option>
+                            <option value="녹색건축인증 / 에너지효율등급">녹색건축인증 / 에너지효율등급</option>
                         </select>
                     </div>
                 </div>
@@ -940,32 +1051,38 @@
     </div>
 
 
-    <!-- MY PAGE MODAL (개인정보 & 기업 형태 수정) -->
+    <!-- MY PAGE MODAL (개인정보 & 11가지 옵션 수정) -->
     <div class="modal-overlay" id="mypage-modal">
-        <div class="modal-content" style="width: 440px;">
+        <div class="modal-content" style="width: 500px;">
             <button class="close-btn" onclick="closeModal('mypage-modal')">&times;</button>
-            <h2 style="margin-bottom: 20px; color: var(--color-primary);">내 정보 및 기업 형태 관리</h2>
+            <h2 style="margin-bottom: 20px; color: var(--color-primary);">내 정보 및 기업 분류 수정</h2>
             <form class="auth-form active" onsubmit="handleUpdateMyInfo(event)">
                 <div class="form-group"><label>아이디 변경</label><input type="text" id="mypage-id" required></div>
                 <div class="form-group"><label>새 비밀번호 (변경 시에만)</label><input type="password" id="mypage-pw" placeholder="비밀번호 입력"></div>
                 <div class="form-group"><label>기업명 / 이름</label><input type="text" id="mypage-name" required></div>
                 
-                <div style="background-color: var(--color-bg-light); padding:12px; border-radius:10px; margin-bottom:12px;">
+                <div style="background-color: var(--color-bg-light); padding:15px; border-radius:10px; margin-bottom:14px; max-height:260px; overflow-y:auto;">
                     <div class="form-group">
-                        <label>기업 규모 형태 수정</label>
+                        <label>1. 기업 규모 수정</label>
                         <select id="mypage-scale">
-                            <option value="sme">중소기업</option>
-                            <option value="large">대기업 / 중견기업</option>
-                            <option value="startup">스타트업 / 창업기업</option>
+                            <option value="10명 미만 (소상공인)">10명 미만 (소상공인)</option>
+                            <option value="10명 이상 ~ 50명 미만 (소기업)">10명 이상 ~ 50명 미만 (소기업)</option>
+                            <option value="50명 이상 ~ 300명 미만 (중기업)">50명 이상 ~ 300명 미만 (중기업)</option>
+                            <option value="300명 이상 ~ 1,000명 미만 (중견기업)">300명 이상 ~ 1,000명 미만 (중견기업)</option>
+                            <option value="1,000명 이상 (대기업)">1,000명 이상 (대기업)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>주요 사업 분야 수정</label>
-                        <select id="mypage-biz">
-                            <option value="air">대기배출 / 제조업</option>
-                            <option value="water">수질 / 폐수처리</option>
-                            <option value="recycling">순환경제 / 폐기물</option>
-                            <option value="carbon">탄소중립 / ESG</option>
+                        <label>4. 주요 업종 수정</label>
+                        <select id="mypage-industry">
+                            <option value="제조업 (중화학·석유·철강 등)">제조업 (중화학·석유·철강 등)</option>
+                            <option value="제조업 (일반·경공업)">제조업 (일반·경공업)</option>
+                            <option value="IT / 정보통신 / 소프트웨어">IT / 정보통신 / 소프트웨어</option>
+                            <option value="건설업 / 부동산 개발">건설업 / 부동산 개발</option>
+                            <option value="운수 / 물류 / 유통">운수 / 물류 / 유통</option>
+                            <option value="도소매 / 서비스업">도소매 / 서비스업</option>
+                            <option value="에너지 / 발전 / 자원순환">에너지 / 발전 / 자원순환</option>
+                            <option value="금융 / 전문 서비스">금융 / 전문 서비스</option>
                         </select>
                     </div>
                 </div>
@@ -1017,7 +1134,7 @@
             <h2 style="margin-bottom: 15px; color: var(--color-primary);">회원 관리</h2>
             <table class="admin-table">
                 <thead>
-                    <tr><th>아이디</th><th>구분</th><th>기업명</th><th>기업 형태</th><th>관리</th></tr>
+                    <tr><th>아이디</th><th>구분</th><th>기업명</th><th>규모/업종</th><th>관리</th></tr>
                 </thead>
                 <tbody id="admin-user-tbody"></tbody>
             </table>
@@ -1059,6 +1176,7 @@
                     </select>
                 </div>
                 <div class="form-group"><label>제목</label><input type="text" id="add-info-title" required></div>
+                <div class="form-group"><label>날짜 / 시행일</label><input type="text" id="add-info-date" placeholder="예: 시행 2026.7.1." required></div>
                 <div class="form-group"><label>내용</label><textarea id="add-info-desc" rows="4" required></textarea></div>
                 <button type="submit" class="btn-submit">정보 추가 등록</button>
             </form>
@@ -1088,36 +1206,41 @@
         let pendingDeleteUserId = null;
         let targetResetUserId = null;
 
-        // 정형화된 6개 분류 데이터베이스 [분야 | 제목 | 내용]
+        // 스프레드시트 5개 시트 데이터를 반영하여 [제목 / 날짜 / 내용] 양식 및 링크 연결 데이터베이스 구성
         const db = {
             '환경규제': [
-                { category: '환경규제', title: '중소기업기본법 [시행 2026.7.1.]', desc: '중소기업의 구분 및 육성 정책 수립에 관한 기초 법률로서 제반 사업 추진 시 준수 필요.' },
-                { category: '환경규제', title: '대·중소기업 상생협력 촉진에 관한 법률', desc: '대기업과 중소기업 간의 동반성장 추진 및 불공정 거래 행위 방지 조항 규제.' },
-                { category: '환경규제', title: '대기환경보전법 [제32조, 제35조의4 등]', desc: '사업장 대기오염물질 배출가스 측정기 부착 및 비산배출시설 설치 신고 법령.' },
-                { category: '환경규제', title: '물환경보전법 [시행 2026.2.19.]', desc: '폐수배출시설 설치 허가 및 수질오염물질 배출 허용기준 관리 법안.' },
-                { category: '환경규제', title: '순환경제사회 전환 촉진법 [시행 2026.2.19.]', desc: '사업장 폐기물 감축 및 자원순환 성과관리 목표 제출 규제 조항.' }
+                { title: '대ㆍ중소기업 상생협력 촉진에 관한 법률', date: '시행 2026.7.1.', desc: '대기업과 중소기업 간 상생 협력 및 불공정 거래 방지 관련 세부 조항 규제 법안.', link: 'https://www.law.go.kr/법령/대ㆍ중소기업상생협력촉진에관한법률/' },
+                { title: '중소기업기본법', date: '시행 2026.7.1.', desc: '중소기업의 구분 및 육성 기본 계획에 관한 법률로 관련 사업 추진 시 필히 참조해야 하는 기초 법안.', link: 'https://www.law.go.kr/법령/중소기업기본법/' },
+                { title: '중소기업기술 보호 지원에 관한 법', date: '시행 2026.7.1.', desc: '중소기업 기술 유출 방지 및 보호 지원에 관한 법률.', link: 'https://www.law.go.kr/법령/중소기업기술보호지원에관한법률/' },
+                { title: '중소기업 기술혁신 촉진법', date: '시행 2026.7.1.', desc: '중소기업의 기술혁신 지원 및 경쟁력 강화 법안.', link: 'https://www.law.go.kr/법령/중소기업기술혁신촉진법/' },
+                { title: '대기환경보전법 (측정기기 부착 등)', date: '시행 2026.7.7.', desc: '사업장 대기오염물질 측정기기 부착, 배출부과금 징수유예 및 비산배출시설 설치신고 준수 법안.', link: 'https://www.law.go.kr/법령/대기환경보전법/' },
+                { title: '물환경보전법', date: '시행 2026.2.19.', desc: '수질오염물질 배출 및 폐수 배출시설 운영 기업 대상 수질 관리 법안.', link: 'https://www.law.go.kr/법령/물환경보전법/' },
+                { title: '순환경제사회 전환 촉진법', date: '시행 2026.2.19.', desc: '자원 순환 및 폐기물 감축 목표 준수를 위해 기업에 요구되는 관련 법안.', link: 'https://www.law.go.kr/법령/순환경제사회전환촉진법/' }
             ],
             '환경정보': [
-                { category: '환경정보', title: '탄소중립 (Net-Zero)', desc: '온실가스 배출량을 줄이고 흡수/제거를 통해 실질 순배출량을 0으로 만드는 상태.' },
-                { category: '환경정보', title: '온실가스 인벤토리', desc: '기업의 경영 활동으로 인해 배출되는 온실가스의 종류와 배출량을 기록한 종합 목록.' },
-                { category: '환경정보', title: '스코프 1 (Scope 1)', desc: '기업의 소유 배출원에서 발생하는 직접 온실가스 배출량.' },
-                { category: '환경정보', title: '스코프 2 (Scope 2)', desc: '구매하여 사용하는 전기, 열, 냉방 생산 과정에서 발생하는 간접 배출량.' },
-                { category: '환경정보', title: '스코프 3 (Scope 3)', desc: '공급망, 제품 유통, 폐기 등 기업 가치사슬 전체에서 발생하는 기타 간접 배출량.' }
+                { title: '탄소중립 (Net-Zero)', date: '상시 개념', desc: '온실가스 배출량을 줄이고 남은 배출량은 흡수 및 제거 등을 통해 실질적인 순배출량을 0으로 만드는 것.' },
+                { title: '온실가스 인벤토리', date: '상시 개념', desc: '기업이 배출하는 온실가스의 종류와 배출량을 체계적으로 파악하고 기록한 목록.' },
+                { title: '스코프 1 (Scope 1)', date: '상시 개념', desc: '기업이 직접 소유하거나 통제하는 배출원에서 발생하는 직접 온실가스 배출.' },
+                { title: '스코프 2 (Scope 2)', date: '상시 개념', desc: '기업이 구매해 사용하는 전기, 열, 증기, 냉방 등의 생산 과정에서 발생한 간접 온실가스 배출.' },
+                { title: '스코프 3 (Scope 3)', date: '상시 개념', desc: '스코프 1, 2에 포함되지 않는 공급망, 제품 운송, 출장, 제품 사용·폐기 등 가치사슬에서 발생하는 기타 간접 배출.' }
             ],
             'ESG': [
-                { category: 'ESG', title: 'ESG 관점의 중요성', desc: '글로벌 금융 시장의 투자 의사결정 시 핵심 평가 요소로 자리잡은 지표 체계.' },
-                { category: 'ESG', title: '한국ESG기준원 평가 체계', desc: '독립성과 공정성을 바탕으로 한 기업 ESG 등급 평가 및 모니터링 기준.' }
+                { title: 'ESG 개요 및 정의', date: '상시 안내', desc: '기업의 지속가능경영을 위한 환경(Environment), 사회(Social), 지배구조(Governance) 지표 체계.', link: 'https://esg.krx.co.kr/contents/01/01010100/ESG01010100.jsp' },
+                { title: 'ESG를 활용한 금융시장 규모 확대', date: '상시 안내', desc: '글로벌 금융 시장에서 ESG 투자 의사결정이 차지하는 비중과 중요성 안내.', link: 'https://esg.krx.co.kr/contents/01/01020300/ESG01020300.jsp' },
+                { title: '한국ESG기준원 평가 체계', date: '상시 안내', desc: '독립적이고 공정한 내부통제기준을 거쳐 이루어지는 기업 ESG 등급 평가 기준.', link: 'https://www.cgs.or.kr/business/esg_tab04.jsp' }
             ],
             '정부지원사업': [
-                { category: '정부지원사업', title: '기후에너지환경부 에너지 부문 지원사업', desc: '에너지 효율 향상 및 친환경 공정 개선 자금 지원 공고.' },
-                { category: '정부지원사업', title: '기업마당 중소기업 ESG/탄소중립 지원', desc: '중앙부처 공모 친환경 보조금 및 융자 우대 프로그램.' }
+                { title: '기후에너지환경부 에너지 부문 지원사업', date: '2026 공고', desc: '에너지 효율 향상 및 친환경 공정 개선 자금 지원 공고.', link: 'https://mcee.go.kr/home/web/board/list.do?menuId=10579&boardMasterId=837' },
+                { title: '기후에너지환경부 환경 부문 지원사업 및 안내', date: '2026 공고', desc: '환경부 소관 친환경 정책 및 지원사업 데이터.', link: 'https://mcee.go.kr/home/web/policy_data/list.do?menuId=10276' },
+                { title: '기업마당 중소기업 환경 지원사업', date: '중앙부처 공고', desc: '중소벤처기업부 및 유관기관의 환경 부문 맞춤형 정부 보조금/지원 사업.', link: 'https://www.bizinfo.go.kr/sii/siia/selectSIIA200View.do?keyword=%ED%99%98%EA%B2%BD' },
+                { title: '기업마당 중소기업 ESG 지원사업', date: '중앙부처 공고', desc: '중소기업 ESG 진단 및 컨설팅 지원 공고.', link: 'https://www.bizinfo.go.kr/sii/siia/selectSIIA200View.do?keyword=ESG' }
             ],
             '환경인증': [
-                { category: '환경인증', title: '환경표지 인증 제도', desc: '에너지·자원 절약 및 오염물질 발생 최소화 우수 제품 대상 국가 마크 부여.' },
-                { category: '환경인증', title: '환경성적표지 (LCA 기반 인증)', desc: '원료 채취부터 폐기까지 전 과정 환경 영향을 계량화하여 인증하는 국가 제도.' }
+                { title: '환경표지 인증', date: '국가 공인 제도', desc: '같은 용도의 제품 중 에너지·자원 소비를 줄이고 오염물질 발생을 최소화한 우수 제품에 마크 부여.', link: 'https://www.keiti.re.kr/site/keiti/02/10203010000002018092810.jsp' },
+                { title: '환경성적표지 인증', date: '국가 공인 제도', desc: '원료 채취부터 생산, 유통, 사용, 폐기까지 전 과정 환경영향을 계량화해 소비자에게 알리는 제도.', link: 'https://www.keiti.re.kr/site/keiti/02/10202100000002023101610.jsp' }
             ],
             '기타정보': [
-                { category: '기타정보', title: '환경 경영 도움말 및 가이드', desc: '기업 실무자를 위한 맞춤형 법률 모니터링 및 참고 서식 자원.' }
+                { title: '기업 환경 경영 참고 자료', date: '상시 참고', desc: '기업 실무자를 위한 맞춤형 법률 모니터링 및 참고 서식 자원.' }
             ]
         };
 
@@ -1126,7 +1249,6 @@
             initVisionSlider();
         };
 
-        // 비전 슬라이더 인터랙션
         function initVisionSlider() {
             const slides = document.querySelectorAll('.vision-slide');
             let idx = 0;
@@ -1157,7 +1279,6 @@
                 `;
             } else {
                 nav.innerHTML = `
-                    <a onclick="showInformation('회사소개')">회사소개</a>
                     <a onclick="showInformation('환경규제')">환경규제</a>
                     <a onclick="showInformation('환경정보')">환경정보</a>
                     <a onclick="showInformation('ESG')">ESG</a>
@@ -1218,8 +1339,6 @@
             const type = document.getElementById('signup-type').value;
             const name = document.getElementById('signup-name').value.trim();
             const pw = document.getElementById('signup-pw').value;
-            const scale = document.getElementById('signup-scale').value;
-            const biz = document.getElementById('signup-biz').value;
             const book = document.getElementById('signup-book').value.trim();
 
             if (!isIdChecked) {
@@ -1229,7 +1348,18 @@
 
             const userData = {
                 id: id, pw: pw, name: name, isAdmin: (type === 'admin'),
-                scale: scale, biz: biz, book: book
+                scale: document.getElementById('opt-scale').value,
+                revenue: document.getElementById('opt-revenue').value,
+                asset: document.getElementById('opt-asset').value,
+                industry: document.getElementById('opt-industry').value,
+                structure: document.getElementById('opt-structure').value,
+                emission: document.getElementById('opt-emission').value,
+                regulation: document.getElementById('opt-regulation').value,
+                consumption: document.getElementById('opt-consumption').value,
+                supply: document.getElementById('opt-supply').value,
+                esgStage: document.getElementById('opt-esg-stage').value,
+                certification: document.getElementById('opt-certification').value,
+                book: book
             };
 
             localStorage.setItem('user_' + id, JSON.stringify(userData));
@@ -1251,12 +1381,12 @@
             if (user.pw !== pw) { alert('비밀번호가 일치하지 않습니다.'); return; }
 
             alert(`${user.name}님 환영합니다!`);
-            currentUser = { id: user.id, name: user.name, isAdmin: user.isAdmin, scale: user.scale, biz: user.biz };
+            currentUser = { id: user.id, name: user.name, isAdmin: user.isAdmin, scale: user.scale, industry: user.industry };
             setLoggedInUI();
             closeModal('auth-modal');
 
             if (!user.isAdmin) {
-                renderAiMatchInfo(user.scale, user.biz);
+                renderAiMatchInfo(user);
             }
         }
 
@@ -1299,27 +1429,32 @@
             location.reload();
         }
 
-        // 맞춤형 자동 추출 및 출력
-        function renderAiMatchInfo(scale, biz) {
+        // AI 맞춤 정보 필터링 출력
+        function renderAiMatchInfo(user) {
             const grid = document.getElementById('ai-info-grid');
             const desc = document.getElementById('ai-match-desc');
             grid.innerHTML = '';
 
-            let scaleLabel = scale === 'sme' ? '중소기업' : (scale === 'large' ? '대/중견기업' : '스타트업');
-            desc.innerText = `[${scaleLabel}] 및 [${biz.toUpperCase()} 분야] 형태 조건에 맞춰 추천 정보를 추출했습니다.`;
+            desc.innerText = `[${user.scale}] 및 [업종: ${user.industry}] 조건에 맞춰 AI가 스프레드시트 데이터 중 관련 규제 및 인증 정보를 정렬했습니다.`;
 
-            let matches = [
-                { category: '환경규제', title: '중소기업기본법 [시행 2026.7.1.]', desc: '중소기업 구분 및 적용 판단 기준 법률.' },
-                { category: '환경규제', title: '대기환경보전법 제32조', desc: '대기배출 시설 모니터링 수칙 및 과세 기준.' },
-                { category: '환경정보', title: '스코프 1, 2, 3 온실가스 관리', desc: '가치사슬 배출량 파악 및 탄소중립 대응 가이드.' }
-            ];
+            let matches = [];
+            // 시트 데이터를 기반으로 업종 및 규모에 맞춘 필터링 예시
+            if (user.industry && user.industry.includes('제조업')) {
+                matches.push({ category: '환경규제', title: '대기환경보전법 (측정기기 부착 등)', date: '시행 2026.7.7.', desc: '제조업 사업장의 대기오염물질 측정기기 부착 및 비산배출시설 설치신고 규제.', link: 'https://www.law.go.kr/법령/대기환경보전법/' });
+                matches.push({ category: '환경인증', title: '환경표지 인증', date: '국가 공인 제도', desc: '에너지·자원 소비를 줄이고 오염물질 발생을 최소화한 우수 제품 대상 마크.', link: 'https://www.keiti.re.kr/site/keiti/02/10203010000002018092810.jsp' });
+            } else {
+                matches.push({ category: '환경규제', title: '중소기업기본법', date: '시행 2026.7.1.', desc: '중소기업 구분 및 육성 기본 계획에 관한 법률.', link: 'https://www.law.go.kr/법령/중소기업기본법/' });
+                matches.push({ category: 'ESG', title: 'ESG 개요 및 정의', date: '상시 안내', desc: '지속가능경영을 위한 ESG 지표 체계.', link: 'https://esg.krx.co.kr/contents/01/01010100/ESG01010100.jsp' });
+            }
+
+            matches.push({ category: '정부지원사업', title: '기후에너지환경부 에너지 부문 지원사업', date: '2026 공고', desc: '에너지 효율 향상 지원 자금 공고.', link: 'https://mcee.go.kr/home/web/board/list.do?menuId=10579&boardMasterId=837' });
 
             matches.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'info-item';
                 div.innerHTML = `
                     <span class="info-tag">${item.category}</span>
-                    <h4>${item.title}</h4>
+                    <h4><a href="${item.link}" target="_blank">${item.title}</a> (${item.date})</h4>
                     <p>${item.desc}</p>
                 `;
                 grid.appendChild(div);
@@ -1364,7 +1499,7 @@
                         <td><strong>${u.id}</strong></td>
                         <td>${u.isAdmin ? '👑 관리자' : '일반'}</td>
                         <td>${u.name}</td>
-                        <td>${u.scale || '미지정'} / ${u.biz || '미지정'}</td>
+                        <td>${u.scale || '미지정'}</td>
                         <td><button style="background:#C94A4A; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="adminDeleteUser('${u.id}')">삭제</button></td>
                     `;
                     tbody.appendChild(tr);
@@ -1405,12 +1540,13 @@
             const u = JSON.parse(stored);
 
             document.getElementById('modal-title').innerText = `[${u.id}] 기업 프로필`;
-            document.getElementById('modal-desc').innerText = `기업 형태 및 내 정보 등록 사항`;
+            document.getElementById('modal-desc').innerText = `등록된 기업 분류 및 옵션 정보`;
 
             document.getElementById('modal-info-list').innerHTML = `
                 <div class="info-item"><span class="info-tag">기업명</span><h4>${u.name}</h4></div>
-                <div class="info-item"><span class="info-tag">기업 규모</span><h4>${u.scale || '미등록'}</h4></div>
-                <div class="info-item"><span class="info-tag">주요 사업</span><h4>${u.biz || '미등록'}</h4></div>
+                <div class="info-item"><span class="info-tag">규모</span><h4>${u.scale || '미등록'}</h4></div>
+                <div class="info-item"><span class="info-tag">업종</span><h4>${u.industry || '미등록'}</h4></div>
+                <div class="info-item"><span class="info-tag">배출 등급</span><h4>${u.emission || '미등록'}</h4></div>
             `;
             openModal('info-modal');
         }
@@ -1419,12 +1555,13 @@
             e.preventDefault();
             const cat = document.getElementById('add-info-category').value;
             const title = document.getElementById('add-info-title').value.trim();
+            const date = document.getElementById('add-info-date').value.trim();
             const desc = document.getElementById('add-info-desc').value.trim();
 
             if (!db[cat]) db[cat] = [];
-            db[cat].unshift({ category: cat, title: title, desc: desc });
+            db[cat].unshift({ title: title, date: date, desc: desc, link: '#' });
 
-            alert('새로운 정보가 추가 등록되었습니다.');
+            alert('새로운 환경 정보가 추가 등록되었습니다.');
             closeModal('admin-add-info-modal');
             showInformation(cat);
         }
@@ -1468,8 +1605,8 @@
             const u = JSON.parse(stored);
             document.getElementById('mypage-id').value = u.id;
             document.getElementById('mypage-name').value = u.name;
-            document.getElementById('mypage-scale').value = u.scale || 'sme';
-            document.getElementById('mypage-biz').value = u.biz || 'air';
+            document.getElementById('mypage-scale').value = u.scale || '';
+            document.getElementById('mypage-industry').value = u.industry || '';
 
             openModal('mypage-modal');
         }
@@ -1481,7 +1618,7 @@
             const newName = document.getElementById('mypage-name').value.trim();
             const newPw = document.getElementById('mypage-pw').value;
             const newScale = document.getElementById('mypage-scale').value;
-            const newBiz = document.getElementById('mypage-biz').value;
+            const newIndustry = document.getElementById('mypage-industry').value;
 
             const stored = localStorage.getItem('user_' + oldId);
             if (!stored) return;
@@ -1495,18 +1632,18 @@
 
             u.name = newName;
             u.scale = newScale;
-            u.biz = newBiz;
+            u.industry = newIndustry;
             if (newPw !== "") u.pw = newPw;
 
             localStorage.setItem('user_' + u.id, JSON.stringify(u));
             currentUser.id = u.id;
             currentUser.name = u.name;
             currentUser.scale = u.scale;
-            currentUser.biz = u.biz;
+            currentUser.industry = u.industry;
 
             alert('정보가 수정되었습니다.');
             setLoggedInUI();
-            renderAiMatchInfo(u.scale, u.biz);
+            renderAiMatchInfo(u);
             closeModal('mypage-modal');
         }
 
@@ -1542,11 +1679,11 @@
 
         function showInformation(categoryKey) {
             const list = db[categoryKey] || [
-                { category: categoryKey, title: `${categoryKey} 안내`, desc: '해당 분야에 대한 상세 정보 지침 업데이트 중입니다.' }
+                { title: `${categoryKey} 안내`, date: '상시', desc: '해당 분야에 대한 상세 정보 지침 업데이트 중입니다.', link: '#' }
             ];
 
             document.getElementById('modal-title').innerText = categoryKey;
-            document.getElementById('modal-desc').innerText = `[분야 | 제목 | 내용] 양식으로 정형화된 정보입니다.`;
+            document.getElementById('modal-desc').innerText = `[제목 / 날짜 / 내용] 양식으로 정형화된 정보입니다.`;
 
             const container = document.getElementById('modal-info-list');
             container.innerHTML = '';
@@ -1555,8 +1692,8 @@
                 const div = document.createElement('div');
                 div.className = 'info-item';
                 div.innerHTML = `
-                    <span class="info-tag">${item.category || categoryKey}</span>
-                    <h4>${item.title}</h4>
+                    <span class="info-tag">${categoryKey}</span>
+                    <h4><a href="${item.link || '#'}" target="_blank">${item.title}</a> (${item.date})</h4>
                     <p>${item.desc}</p>
                 `;
                 container.appendChild(div);
@@ -1574,14 +1711,14 @@
             if (!keyword) { alert("검색어를 입력하세요."); return; }
 
             document.getElementById('modal-title').innerText = `'${keyword}' 검색 결과`;
-            document.getElementById('modal-desc').innerText = `입력하신 키워드 [${keyword}] 검색 결과입니다.`;
+            document.getElementById('modal-desc').innerText = `입력하신 키워드 [${keyword}]와 관련된 스프레드시트 정보입니다.`;
 
             const container = document.getElementById('modal-info-list');
             container.innerHTML = `
                 <div class="info-item">
-                    <span class="info-tag">검색결과</span>
-                    <h4>${keyword} 관련 핵심 규제 및 가이드</h4>
-                    <p>${keyword}에 연관된 사업장 모니터링 지침 및 조항입니다.</p>
+                    <span class="info-tag">검색 매칭</span>
+                    <h4>${keyword} 관련 규제 및 지침</h4>
+                    <p>${keyword} 키워드가 포함된 법령, 용어 또는 지원 사업 정보입니다.</p>
                 </div>
             `;
 
