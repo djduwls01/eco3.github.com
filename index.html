@@ -31,7 +31,7 @@
 
         /* ----- HEADER ----- */
         header {
-            height: 80px;
+            height: 85px;
             padding: 0 40px;
             display: flex;
             align-items: center;
@@ -44,15 +44,28 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        .logo {
-            font-size: 26px;
+        /* 로고 영역 이미지 & 텍스트 정렬 */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 24px;
             font-weight: 800;
             color: var(--color-primary);
-            cursor: pointer;
             letter-spacing: 1px;
         }
 
-        .logo span {
+        .logo-text span {
             color: var(--color-secondary);
             font-weight: 400;
         }
@@ -653,8 +666,10 @@
 
     <!-- ----- HEADER ----- -->
     <header>
-        <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-            EIJU <span>ECO</span>
+        <!-- 친환경 지식 행성 로고 이미지 적용 부분 -->
+        <div class="logo-container" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <img src="친환경 지식 행성 로고_2.png" alt="친환경 지식 행성 로고" class="logo-img">
+            <div class="logo-text">EIJU <span>ECO</span></div>
         </div>
 
         <nav id="main-nav"></nav>
@@ -1103,14 +1118,13 @@
         let pendingDeleteUserId = null;
         let targetResetUserId = null;
 
-        // 엑셀 파일 내 모든 시트 데이터를 반영한 통합 데이터베이스 [제목 / 날짜 / 내용 / 링크]
         const db = {
             '환경규제': [
                 { title: '대ㆍ중소기업 상생협력 촉진에 관한 법률', date: '시행 2026-07-01 (개정예정 2026-12-03)', desc: '대기업과 중소기업 간 상생협력 및 동반성장을 촉진하는 법률. 환경 직접규제라기보다는 공급망 협력·중소 협력사 지원사업과 연계.', link: 'https://www.law.go.kr/법령/대ㆍ중소기업상생협력촉진에관한법률/' },
                 { title: '중소기업기본법', date: '시행 2026-07-01', desc: '중소기업의 범위·기준과 국가의 중소기업 육성 정책에 관한 기본 법률. 각종 지원사업 자격 판단에 핵심 기준.', link: 'https://www.law.go.kr/법령/중소기업기본법/' },
                 { title: '중소기업기술 보호 지원에 관한 법률', date: '시행 2026-07-01', desc: '중소기업의 기술 보호와 기술침해 예방·대응 및 관련 지원체계에 관한 법률.', link: 'https://www.law.go.kr/법령/중소기업기술보호지원에관한법률/' },
                 { title: '중소기업 기술혁신 촉진법', date: '시행 2026-07-01', desc: '중소기업의 기술혁신·연구개발 및 기술사업화를 촉진하는 법률. 녹색기술·환경기술 개발기업 참고.', link: 'https://www.law.go.kr/법령/중소기업기술혁신촉진법/' },
-                { title: '중소기업 사업전환 촉진에 관한 특별법', date: '시행 2025-10-01', desc: '중소기업의 사업전환을 지원하는 특별법. 친환경 공정·제품 등으로의 전환을 검토하는 기업 지원.', link: 'https://www.law.go.kr/법령/중소기업사업전환 촉진에관한특별법/' },
+                { title: '중소기업 사업전환 촉진에 관한 특별법', date: '시행 2025-10-01', desc: '중소기업의 사업전환을 지원하는 특별법. 친환경 공정·제품 등으로의 전환을 검토하는 기업 지원.', link: 'https://www.law.go.kr/법령/중소기업사업전환촉진에관한특별법/' },
                 { title: '대기환경보전법 (측정기기 부착 등)', date: '시행 2026-07-07', desc: '사업장 대기오염물질 배출가스 측정기 부착, 배출부과금 징수유예 및 비산배출시설 설치신고 법령.', link: 'https://www.law.go.kr/법령/대기환경보전법/' },
                 { title: '물환경보전법', date: '시행 2026-02-19', desc: '수질오염물질 배출 및 폐수 배출시설 운영 기업 대상 수질 관리 법안.', link: 'https://www.law.go.kr/법령/물환경보전법/' },
                 { title: '순환경제사회 전환 촉진법', date: '시행 2026-02-19', desc: '자원 순환 및 폐기물 감축 목표 준수를 위해 기업에 요구되는 관련 법안.', link: 'https://www.law.go.kr/법령/순환경제사회전환촉진법/' }
@@ -1328,7 +1342,6 @@
             location.reload();
         }
 
-        // 맞춤형 정보 추천
         function renderAiMatchInfo(user) {
             const grid = document.getElementById('ai-info-grid');
             const desc = document.getElementById('ai-match-desc');
@@ -1601,14 +1614,12 @@
             if (e.key === 'Enter') searchInformation();
         }
 
-        // 50개 이상의 키워드 매핑 및 연관성 순위 정렬 검색 엔진
         function searchInformation() {
             const keyword = document.getElementById('search-input').value.trim().toLowerCase();
             if (!keyword) { alert("검색어를 입력하세요."); return; }
 
             let results = [];
 
-            // 모든 카테고리 항목 순회하며 키워드 매칭 및 점수 산정 (연관성 높은 순 정렬)
             for (let cat in db) {
                 db[cat].forEach(item => {
                     let score = 0;
@@ -1620,7 +1631,6 @@
                     if (descLower.includes(keyword)) score += 5;
                     if (catLower.includes(keyword)) score += 3;
 
-                    // 간접 키워드 매핑 (예: 탄소, 에코, 상생, 지원, 법 등)
                     if (keyword.includes('탄소') && (titleLower.includes('중립') || titleLower.includes('발자국') || descLower.includes('탄소'))) score += 7;
                     if (keyword.includes('지원') && (catLower.includes('정부지원사업') || descLower.includes('지원'))) score += 6;
                     if (keyword.includes('인증') && (catLower.includes('환경인증') || titleLower.includes('인증'))) score += 6;
@@ -1633,7 +1643,6 @@
                 });
             }
 
-            // 연관성 점수(score) 높은 순으로 정렬
             results.sort((a, b) => b.score - a.score);
 
             document.getElementById('modal-title').innerText = `'${keyword}' 검색 결과`;
